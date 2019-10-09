@@ -16,7 +16,7 @@ assert () {
     fi
 }
 
-for i in `git diff --name-only --cached --diff-filter=AM | grep 'lib/.*\.js'`; do
+for i in `git diff --name-only --cached --diff-filter=AM | egrep '(js|lib)/.*\.js' | grep -v 3rd-party`; do
     echo "# check $i"
     assert eslint "$i"
     assert ! grep -q "' $'" $i
