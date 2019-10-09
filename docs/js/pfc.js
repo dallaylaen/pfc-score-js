@@ -9,14 +9,15 @@
         const score = (raw.score === undefined) 
             ? 1 
             : Number.parseInt(raw.score);
-        if (Number.isNaN(score)) 
+        if (Number.isNaN(score))
             throw new Error('score must be a number, or undefined (default = 1)');
+
         this.score = score;
 
         this.day = function() {
             return this.time.toISOString().split('T')[0];
         };
-    };
+    }
 
     function Day (date) {
         this.day = date;
@@ -29,7 +30,7 @@
             this.rec.forEach( rec => score += rec.score );
             return score;
         };
-    };
+    }
 
     function PFC () {
         this.days = {};
@@ -39,7 +40,7 @@
             const day = rec.day();
             if (!this.days[day]) {
                 this.days[day] = new Day(day);
-            };
+            }
             this.days[day].addRecord(rec);
         };
 
@@ -50,7 +51,7 @@
         this.getDetails = function(day) {
             return this.days[day] || new Day(day);
         };
-    };
+    }
 
     if (typeof module === 'object' && typeof module.exports === 'object' ) {
         // we're being exported
@@ -59,5 +60,5 @@
         window.PFC = PFC;
     } else {
         throw new Error("Don't know how to export");
-    };
+    }
 })(this);
