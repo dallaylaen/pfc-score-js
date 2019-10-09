@@ -4,10 +4,12 @@
              throw new Error('cannot create Record w/o descr');
 
         this.text = raw.descr;
-        this.time = raw.time || new Datetime();
+        this.time = raw.time || new Date();
 
-        const score = typeof raw.score === undefined ? 1 : Number.parseInt(raw.score);
-        if (number.isNaN(score)) 
+        const score = (raw.score === undefined) 
+            ? 1 
+            : Number.parseInt(raw.score);
+        if (Number.isNaN(score)) 
             throw new Error('score must be a number, or undefined (default = 1)');
         this.score = score;
 
