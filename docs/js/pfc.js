@@ -1,7 +1,7 @@
 (function (window) {
     function Record (raw) {
-        if (typeof raw !== 'object' || !raw.descr)
-             throw new Error('cannot create Record w/o descr');
+        if (typeof raw !== 'object')
+             throw new Error('Record must be an object');
 
         this.text = raw.descr;
         this.time = raw.time || new Date();
@@ -27,6 +27,7 @@
         this.score = function() {
             let score = 0;
             this.rec.forEach( rec => score += rec.score );
+            return score;
         };
     };
 

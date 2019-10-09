@@ -11,6 +11,13 @@ describe( 'PFC', () => {
 
         pfc.addRecord({descr: "lazy"});
 
+        const days = pfc.getDays();
+        expect( days.length ).to.equal(1);
+        expect( days[0] ).to.match( /^\d{4}-\d\d-\d\d$/ );
+
+        const thisday = pfc.getDetails( days[0] );
+        expect( thisday.score() ).to.equal(1);
+
         done();
     });
 });
