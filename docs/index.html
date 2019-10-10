@@ -1,0 +1,68 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Prefrontal cortex score sheet</title>
+    <script lang="javascript" src="js/3rd-party/jquery.js"></script>
+    <script lang="javascript" src="js/3rd-party/jrna.js"></script>
+    <script lang="javascript" src="js/pfc.js"></script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
+    <script src="js/"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+    </style>
+</head>
+<body>
+    <div id="error" style="color: red"></div>
+    <h1>Prefrontal cortex score sheet - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <div id="summary">
+            <span class="jrna-day"></span>
+            <span class="jrna-points">0</span>
+        </div>
+        <div id="editor" align="center">
+            <input class="jrna-descr">
+            <button class="jrna-send">++</button>
+        </div>
+    </div>
+
+    <!-- html snippets from .htmlFrom() -->
+    <div id="library" style="display: none">
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        'use strict';
+
+        const pfc = new PFC();
+
+        const summary = new jRna()
+            .output( 'points' )
+            .output( 'day' )
+            .def( 'update', function() {
+                const day = pfc.getDays().reverse()[0];
+                this.day = day;
+                this.points = pfc.getDetails(day).score();
+            })
+            .attach($('#summary'));
+
+        const editor = new jRna()
+            .input( 'descr' )
+            .click( 'send', function() {
+                pfc.addRecord({ descr: this.descr });
+                this.descr = '';
+                summary.update();
+            })
+            .attach($('#editor'));
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
