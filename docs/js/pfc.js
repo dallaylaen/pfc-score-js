@@ -1,9 +1,11 @@
+'use strict';
+
 (function (window) {
     function Record (raw) {
         if (typeof raw !== 'object')
              throw new Error('Record must be an object');
 
-        this.text = raw.descr;
+        this.text = raw.text;
         this.time = raw.time || new Date();
 
         const score = (raw.score === undefined) 
@@ -50,6 +52,23 @@
 
         this.getDetails = function(day) {
             return this.days[day] || new Day(day);
+        };
+
+        this.load = function(raw) {
+            if (!raw)
+                return this;
+            if (typeof raw != 'object')
+                raw = JSON.parse(raw);
+
+            for (let item of raw)
+                this.addRecord(item);
+
+            return this;
+        };
+
+        this.save = function() {
+            return this.getDays().map(d=>this.getDetails(d).rec)
+            .reduce((a,b)=>a.concat(b));
         };
     }
 
