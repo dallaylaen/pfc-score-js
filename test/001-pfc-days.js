@@ -3,7 +3,7 @@ const chai = require('chai');
 const should = chai.should();
 const expect = chai.expect;
 
-const PFC = require( '../docs/js/pfc.js' );
+const PFC = require( '../lib/pfc.js' );
 
 describe( 'PFC', () => {
     it ('has some basic accessors', done => {
