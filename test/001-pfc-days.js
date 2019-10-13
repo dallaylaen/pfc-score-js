@@ -38,7 +38,7 @@ describe( 'PFC', () => {
 
         expect( other.getDays() ).to.deep.equal( pfc.getDays() );
 
-        // expect( other ).to.deep.equal( pfc );
+        // expect( other.save() ).to.deep.equal( pfc.save() );
         
         done();
     });
