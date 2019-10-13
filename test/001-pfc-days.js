@@ -39,7 +39,20 @@ describe( 'PFC', () => {
         expect( other.getDays() ).to.deep.equal( pfc.getDays() );
 
         // expect( other.save() ).to.deep.equal( pfc.save() );
-        
+
+        done();
+    });
+
+    it ('has on update callback', done => {
+        const pfc = new PFC();
+
+        const trace = [];
+        expect( pfc.onUpdate( r=>trace.push(r) )).to.equal(pfc);
+
+        pfc.addRecord({});
+
+        expect( trace.length ).to.equal(1);
+
         done();
     });
 });
