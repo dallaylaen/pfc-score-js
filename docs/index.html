@@ -2,15 +2,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Prefrontal cortex score sheet</title>
-    <script lang="javascript" src="js/3rd-party/jquery.js"></script>
-    <script lang="javascript" src="js/3rd-party/jrna.js"></script>
-    <script lang="javascript" src="js/pfc.js"></script>
     <script lang="javascript">
         window.onerror = function(msg) {
             document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
         };
     </script>
-    <script src="js/"></script>
+    <script lang="javascript" src="js/3rd-party/jquery.js"></script>
+    <script lang="javascript" src="js/3rd-party/jrna.js"></script>
+    <script lang="javascript" src="js/pfc.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <style>
     </style>
@@ -39,7 +38,17 @@
     <script lang="javascript" id="main">
         'use strict';
 
+        const sto = window.localStorage;
+
+        console.log(PFC);
+
         const pfc = new PFC();
+
+        try {
+            pfc.load(sto.getItem('pfc'));
+        } catch(e) {
+            window.onerror("Failed to load pfc data: "+e);
+        };
 
         const summary = new jRna()
             .output( 'points' )
@@ -49,6 +58,7 @@
                 this.day = day;
                 this.points = pfc.getDetails(day).score();
             })
+            .onAttach( function() { this.update() } )
             .attach($('#summary'));
 
         const editor = new jRna()
@@ -59,6 +69,11 @@
                 summary.update();
             })
             .attach($('#editor'));
+
+        pfc.onUpdate(function(r,d,p){
+            sto.setItem('pfc', JSON.stringify(pfc.save()));
+            summary.update();
+        });
     </script>
 
     <!-- describe how to use the page, if needed -->
