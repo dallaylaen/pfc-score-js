@@ -12,6 +12,11 @@
     <script lang="javascript" src="js/pfc.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <style>
+        .day {
+            border:  solid green 1px;
+            padding: 0.25em;
+            margin:  0.25em;
+        }
     </style>
 </head>
 <body>
@@ -20,9 +25,7 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <div id="summary">
-            <span class="jrna-day"></span>
-            <span class="jrna-points">0</span>
+        <div id="summary" align="right">
         </div>
         <div id="editor" align="center">
             <input class="jrna-descr">
@@ -32,6 +35,10 @@
 
     <!-- html snippets from .htmlFrom() -->
     <div id="library" style="display: none">
+        <div class="day jrna-control" style="display: inline-block">
+            <span class="jrna-date"></span>
+            <span class="jrna-score"></span>
+        </div>
     </div>
 
     <!-- the script is here -->
@@ -50,15 +57,29 @@
             window.onerror("Failed to load pfc data: "+e);
         };
 
-        const summary = new jRna()
-            .output( 'points' )
-            .output( 'day' )
-            .def( 'update', function() {
-                const day = pfc.getDays().reverse()[0];
-                this.day = day;
-                this.points = pfc.getDetails(day).score();
+        const showDay = new jRna()
+            .htmlFrom('#library .day')
+            .click( 'control', function () {
+                // TODO
             })
-            .onAttach( function() { this.update() } )
+            .output( 'date' )
+            .output( 'score' )
+            .args( 'day' )
+            .def( 'update', function() {
+                this.date  = this.day.day;
+                this.score = this.day.score();
+            })
+            .onAttach('update');
+
+        const summary = new jRna()
+            .def( 'update', function() {
+                const last = pfc.getDays().reverse().slice(0,5).reverse();
+                this.container.html('');
+                last.forEach(d => showDay.appendTo( 
+                    this.container, { day : pfc.getDetails(d) }
+                ));
+            })
+            .onAttach( 'update' )
             .attach($('#summary'));
 
         const editor = new jRna()
@@ -66,7 +87,6 @@
             .click( 'send', function() {
                 pfc.addRecord({ descr: this.descr });
                 this.descr = '';
-                summary.update();
             })
             .attach($('#editor'));
 
