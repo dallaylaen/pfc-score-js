@@ -772,7 +772,7 @@ function jRna () {
         // execute callbacks
         // TODO rewrite this
         for (let i in meta._onAttach ) {
-            meta._onAttach[i].bind(inst)(args);
+            curry(inst, meta._onAttach[i])(args);
         }
         return inst;
     }; // end of this.attach
