@@ -36,7 +36,7 @@
 
     <!-- html snippets from .htmlFrom() -->
     <div id="library" style="display: none">
-        <div class="day jrna-control" style="display: inline-block">
+        <div class="day jrna-control" style="display: inline-block; cursor: pointer">
             <span class="jrna-date"></span>
             <span class="jrna-score"></span>
         </div>
@@ -85,9 +85,16 @@
 
         const editor = new jRna()
             .input( 'descr' )
-            .click( 'send', function() {
-                pfc.addRecord({ descr: this.descr });
+            .def( 'save', function() {
+                pfc.addRecord({ text: this.descr });
                 this.descr = '';
+            })
+            .click( 'send', 'save' )
+            .on( 'keypress', 'descr', function(ev) {
+                if (ev.key == "Enter") {
+                    ev.preventDefault();
+                    this.save();
+                };
             })
             .attach($('#editor'));
 
