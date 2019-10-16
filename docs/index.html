@@ -18,6 +18,15 @@
             padding: 0.25em;
             margin:  0.25em;
         }
+        .control {
+            color: gray;
+            cursor: pointer;
+        }
+        .framed {
+            border:  solid green 1px;
+            padding: 0.25em;
+            margin:  0.25em;
+        }
     </style>
 </head>
 <body>
@@ -28,6 +37,16 @@
     <div id="root">
         <div id="summary" align="right">
         </div>
+        <div id="day-details" class="framed">
+            <div align="right">
+                <span class="jrna-close control">[close]</span>
+            </div>
+            <div>
+                Report for <span class="jrna-date">unknown date</span>.
+            </div>
+            <div class="jrna-content">
+            </div>
+        </div>
         <div id="editor" align="center">
             <input class="jrna-descr">
             <button class="jrna-send">++</button>
@@ -36,9 +55,14 @@
 
     <!-- html snippets from .htmlFrom() -->
     <div id="library" style="display: none">
-        <div class="day jrna-control" style="display: inline-block; cursor: pointer">
+        <div class="day jrna-control control framed" style="display: inline-block">
             <span class="jrna-date"></span>
             <span class="jrna-score"></span>
+        </div>
+
+        <div class="record">
+            <span class="jrna-time">??:??</span>
+            <span class="jrna-text">...</span>
         </div>
     </div>
 
@@ -58,10 +82,40 @@
             window.onerror("Failed to load pfc data: "+e);
         };
 
+        const showRecord = new jRna()
+            .htmlFrom('#library .record')
+            .output('text')
+            .output('time')
+            .args( 'rec' )
+            .def( 'update', function() {
+                this.text = this.rec.text;
+                this.time = strftime('%H:%M', this.rec.time);
+            })
+            .onAttach( 'update' );
+
+        const fullDay = new jRna()
+            .element( 'content' )
+            .output( 'date' )
+            .def( 'show', function(records, date) {
+                this.date = date || 'unknown date';
+                this.content.html('');
+                for( let i of records ) {
+                    showRecord.appendTo( this.content, { rec: i } );
+                };
+                this.container.show();
+            })
+            .def( 'hide', function() {
+                this.container.hide();
+            })
+            .click( 'close', 'hide' )
+            .onAttach( 'hide' )
+            .attach( '#day-details' );
+
         const showDay = new jRna()
             .htmlFrom('#library .day')
             .click( 'control', function () {
                 // TODO
+                fullDay.show( this.day.rec, this.day.day );
             })
             .output( 'date' )
             .output( 'score' )
