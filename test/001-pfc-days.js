@@ -42,11 +42,11 @@ describe( 'PFC', () => {
 
         const raw  = JSON.parse( JSON.stringify ( data ));
 
-        expect( typeof data ).to.equal('object');
+        expect( typeof raw ).to.equal('object');
 
         const other = new PFC();
         expect( other.load(undefined) ).to.equal(other);
-        expect( other.load( pfc.save() ) ).to.equal(other);
+        expect( other.load( raw ) ).to.equal(other);
 
         expect( other.getDays() ).to.deep.equal( pfc.getDays() );
 
@@ -59,9 +59,12 @@ describe( 'PFC', () => {
 
         // whitebox testing sucks
         expect( day2.stats.weight[0].value ).to.equal( 99 );
-        expect( day2.rec ).to.deep.equal( day1.rec );
+        expect( day2.rec.length ).to.equal(2);
+        expect( day2.rec[0].time ).to.be.instanceof( Date );
 
-        // expect( other.save() ).to.deep.equal( pfc.save() );
+        expect( day2.rec[0].text ).to.equal( day1.rec[0].text );
+        expect( day2.rec[0].score ).to.equal( day1.rec[0].score );
+        expect( ''+day2.rec[0].time ).to.equal( ''+day1.rec[0].time );
 
         done();
     });
