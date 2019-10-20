@@ -61,6 +61,8 @@ describe( 'PFC', () => {
         expect( day2.stats.weight[0].value ).to.equal( 99 );
         expect( day2.rec.length ).to.equal(2);
         expect( day2.rec[0].time ).to.be.instanceof( Date );
+        expect( day2.rec[0] ).to.be.instanceof( PFC.Record );
+        
 
         expect( day2.rec[0].text ).to.equal( day1.rec[0].text );
         expect( day2.rec[0].score ).to.equal( day1.rec[0].score );
