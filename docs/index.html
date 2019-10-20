@@ -84,8 +84,6 @@
 
         const sto = window.localStorage;
 
-        console.log(PFC);
-
         let pfc = new PFC();
 
         try {
@@ -122,10 +120,8 @@
                 this.date = day.day;
                 this.content.html('');
                 for( let i in day.stats ) {
-                    console.log("stats: ".i);
                     showStat.appendTo( this.content, { stat: day.stats[i].slice(-1)[0] } );
                 };
-                console.log("day: ", day);
                 for( let i of day.rec ) {
                     showRecord.appendTo( this.content, { rec: i } );
                 };
