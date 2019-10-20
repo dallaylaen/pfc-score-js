@@ -35,6 +35,10 @@
 
     <!-- initial node to attach to -->
     <div id="root">
+        <div id="menu">
+            <span class="control jrna-save">[save]</span>
+            <span class="control jrna-load">[load]</span>
+        </div>
         <div id="summary" align="right">
         </div>
         <div id="day-details" class="framed">
@@ -74,7 +78,7 @@
 
         console.log(PFC);
 
-        const pfc = new PFC();
+        let pfc = new PFC();
 
         try {
             pfc.load(sto.getItem('pfc'));
@@ -152,14 +156,31 @@
             })
             .attach($('#editor'));
 
-        pfc.onUpdate(function(r,d,p){
+        const onUpdate = function(r,d,p){
             sto.setItem('pfc', JSON.stringify(pfc.save()));
             summary.update();
-        });
-    </script>
+        };
 
-    <!-- describe how to use the page, if needed -->
-    <div id="usage">
-    </div>
+        pfc.onUpdate(onUpdate);
+
+        const menu = new jRna()
+            .click( 'save', e => {
+                jRna.download('pfc-'+strftime('%Y-%m-%d', new Date())+'.json'
+                    , JSON.stringify(pfc.save()));
+            })
+            .click( 'load', e => {
+                jRna.upload().then( input => {
+                    try {
+                        pfc = new PFC().load(JSON.parse(input.content));
+                        pfc.onUpdate(onUpdate);
+                        onUpdate( undefined, undefined, pfc);
+                    } catch (e) {
+                        alert("Failed to upload file: "+e);
+                    };
+                });
+            })
+            .attach('#menu');
+
+    </script>
 </body>
 </html>
