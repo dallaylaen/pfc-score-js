@@ -25,6 +25,7 @@ describe( 'PFC', () => {
         const pfc = new PFC();
 
         pfc.addRecord({text: "lazy"});
+        pfc.addRecord({text: "other lazy"});
 
         const data = pfc.save();
 
@@ -37,6 +38,16 @@ describe( 'PFC', () => {
         expect( other.load( pfc.save() ) ).to.equal(other);
 
         expect( other.getDays() ).to.deep.equal( pfc.getDays() );
+
+        const date = pfc.getDays()[0];
+
+        const day1 = pfc.getDetails(date);
+        const day2 = other.getDetails(date);
+
+        expect( day2.score() ).to.equal( day1.score() );
+
+        // whitebox testing sucks
+        expect( day2.rec ).to.deep.equal( day1.rec );
 
         // expect( other.save() ).to.deep.equal( pfc.save() );
 
