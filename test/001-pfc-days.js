@@ -55,5 +55,15 @@ describe( 'PFC', () => {
 
         done();
     });
+
+    it('can add daily values', done => {
+        // TODO
+        const pfc = new PFC();
+
+        pfc.addValue({time: new Date(), name: 'weight', value: 99});
+        pfc.addValue({time: new Date(), name: 'weight', value: 98});
+
+        done();
+    });
 });
 
