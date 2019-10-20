@@ -51,9 +51,13 @@
             <div class="jrna-content">
             </div>
         </div>
-        <div id="editor" align="center">
+        <div id="editor" align="center" class="framed">
             <input class="jrna-descr">
             <button class="jrna-send">++</button>
+        </div>
+        <div id="stats-form" class="framed">
+            <input size="10em" class="jrna-name">=<input size="10em" class="jrna-value">
+            <button class="jrna-add">record stat</button>
         </div>
     </div>
 
@@ -67,6 +71,10 @@
         <div class="record">
             <span class="jrna-time">??:??</span>
             <span class="jrna-text">...</span>
+        </div>
+
+        <div class="stat">
+            <span class="jrna-name"></span>=&quot;<span class="jrna-value"></span>&quot;
         </div>
     </div>
 
@@ -97,13 +105,28 @@
             })
             .onAttach( 'update' );
 
+        const showStat = new jRna()
+            .htmlFrom('#library .stat')
+            .output('name')
+            .output('value')
+            .args('stat')
+            .onAttach( function() {
+                this.name  = this.stat.name;
+                this.value = this.stat.value;
+            });
+
         const fullDay = new jRna()
             .element( 'content' )
             .output( 'date' )
-            .def( 'show', function(records, date) {
-                this.date = date || 'unknown date';
+            .def( 'show', function(day) {
+                this.date = day.day;
                 this.content.html('');
-                for( let i of records ) {
+                for( let i in day.stats ) {
+                    console.log("stats: ".i);
+                    showStat.appendTo( this.content, { stat: day.stats[i].slice(-1)[0] } );
+                };
+                console.log("day: ", day);
+                for( let i of day.rec ) {
                     showRecord.appendTo( this.content, { rec: i } );
                 };
                 this.container.show();
@@ -118,8 +141,7 @@
         const showDay = new jRna()
             .htmlFrom('#library .day')
             .click( 'control', function () {
-                // TODO
-                fullDay.show( this.day.rec, this.day.day );
+                fullDay.show( this.day );
             })
             .output( 'date' )
             .output( 'score' )
@@ -155,6 +177,19 @@
                 };
             })
             .attach($('#editor'));
+
+        // TODO make select with values from PFC
+        const stats = new jRna()
+            .input('name')
+            .input('value')
+            .click('add', function(e) {
+                if( !this.name || !this.value )
+                    return;
+                pfc.addStat({name: this.name, value: this.value});
+                this.name = '';
+                this.value = '';
+            })
+            .attach('#stats-form');
 
         const onUpdate = function(r,d,p){
             sto.setItem('pfc', JSON.stringify(pfc.save()));
