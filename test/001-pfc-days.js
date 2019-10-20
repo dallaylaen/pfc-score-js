@@ -21,11 +21,22 @@ describe( 'PFC', () => {
         done();
     });
 
+    it('can add daily values', done => {
+        // TODO
+        const pfc = new PFC();
+
+        pfc.addStat({time: new Date(), name: 'weight', value: 99});
+        pfc.addStat({time: new Date(), name: 'weight', value: 98});
+
+        done();
+    });
+
     it ('can save/load', done => {
         const pfc = new PFC();
 
         pfc.addRecord({text: "lazy"});
         pfc.addRecord({text: "other lazy"});
+        pfc.addStat({time: new Date(), name: 'weight', value: 99});
 
         const data = pfc.save();
 
@@ -47,6 +58,7 @@ describe( 'PFC', () => {
         expect( day2.score() ).to.equal( day1.score() );
 
         // whitebox testing sucks
+        expect( day2.stats.weight[0].value ).to.equal( 99 );
         expect( day2.rec ).to.deep.equal( day1.rec );
 
         // expect( other.save() ).to.deep.equal( pfc.save() );
@@ -67,14 +79,5 @@ describe( 'PFC', () => {
         done();
     });
 
-    it('can add daily values', done => {
-        // TODO
-        const pfc = new PFC();
-
-        pfc.addValue({time: new Date(), name: 'weight', value: 99});
-        pfc.addValue({time: new Date(), name: 'weight', value: 98});
-
-        done();
-    });
 });
 
