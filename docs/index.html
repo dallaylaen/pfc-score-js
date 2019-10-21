@@ -52,8 +52,10 @@
             </div>
         </div>
         <div id="editor" align="center" class="framed">
-            <input class="jrna-descr">
-            <button class="jrna-send">++</button>
+            <input class="jrna-descr"><br>
+            <button class="jrna-deed">\m/</button>
+            <button class="jrna-fun">;-)</button>
+            <button class="jrna-note">note</button>
         </div>
         <div id="stats-form" class="framed">
             <input size="10em" class="jrna-name">=<input size="10em" class="jrna-value">
@@ -161,11 +163,13 @@
 
         const editor = new jRna()
             .input( 'descr' )
-            .def( 'save', function() {
-                pfc.addRecord({ text: this.descr });
+            .def( 'save', function(defaults={}) {
+                pfc.addRecord({ ...defaults, text: this.descr });
                 this.descr = '';
             })
-            .click( 'send', 'save' )
+            .click( 'deed', 'save' )
+            .click( 'note', [ 'save', { score: 0 }] )
+            .click( 'fun',  [ 'save', { score: 0, fun: 1 }] )
             .on( 'keypress', 'descr', function(ev) {
                 if (ev.key == "Enter") {
                     ev.preventDefault();
