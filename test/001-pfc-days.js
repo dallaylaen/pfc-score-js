@@ -10,13 +10,16 @@ describe( 'PFC', () => {
         const pfc = new PFC();
 
         pfc.addRecord({text: "lazy"});
+        pfc.addRecord({text: "lazy 2", score: 0});
+        pfc.addRecord({text: "lazy 3", fun:   1});
 
         const days = pfc.getDays();
         expect( days.length ).to.equal(1);
         expect( days[0] ).to.match( /^\d{4}-\d\d-\d\d$/ );
 
         const thisday = pfc.getDetails( days[0] );
-        expect( thisday.score() ).to.equal(1);
+        expect( thisday.score() ).to.equal(2);
+        expect( thisday.fun() ).to.equal(1);
 
         done();
     });
@@ -62,7 +65,6 @@ describe( 'PFC', () => {
         expect( day2.rec.length ).to.equal(2);
         expect( day2.rec[0].time ).to.be.instanceof( Date );
         expect( day2.rec[0] ).to.be.instanceof( PFC.Record );
-        
 
         expect( day2.rec[0].text ).to.equal( day1.rec[0].text );
         expect( day2.rec[0].score ).to.equal( day1.rec[0].score );
