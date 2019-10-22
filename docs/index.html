@@ -66,8 +66,12 @@
     <!-- html snippets from .htmlFrom() -->
     <div id="library" style="display: none">
         <div class="day jrna-control control framed" style="display: inline-block">
+            <div align="center">
             <span class="jrna-date"></span>
-            <span class="jrna-score"></span>
+            </div>
+            <div align="center">
+            <span class="jrna-score"></span> / <span class="jrna-fun"></span>
+            </div>
         </div>
 
         <div class="record">
@@ -142,11 +146,13 @@
                 fullDay.show( this.day );
             })
             .output( 'date' )
+            .output( 'fun' )
             .output( 'score' )
             .args( 'day' )
             .def( 'update', function() {
                 this.date  = this.day.day;
                 this.score = this.day.score();
+                this.fun = this.day.fun();
             })
             .onAttach('update');
 
