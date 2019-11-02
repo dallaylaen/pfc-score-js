@@ -170,7 +170,7 @@
 
         const summary = new jRna()
             .def( 'update', function() {
-                const last = pfc.getDays().reverse().slice(0,5).reverse();
+                const last = pfc.getDays().reverse().slice(0,8).reverse();
                 this.container.html('');
                 last.forEach(d => showDay.appendTo( 
                     this.container, { day : pfc.getDetails(d) }
