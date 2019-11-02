@@ -5,6 +5,14 @@ const expect = chai.expect;
 
 const PFC = require( '../lib/pfc.js' );
 
+describe( 'PFC.Day', () => {
+    it ('has wday', done => {
+        const day = new PFC.Day('2019-11-02');
+        expect( day.wday() ).to.equal('Sat');
+        done();
+    });
+});
+
 describe( 'PFC', () => {
     it ('has some basic accessors', done => {
         const pfc = new PFC();
@@ -85,6 +93,5 @@ describe( 'PFC', () => {
 
         done();
     });
-
 });
 
