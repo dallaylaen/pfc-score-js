@@ -67,6 +67,9 @@
     <div id="library" style="display: none">
         <div class="day jrna-control control framed" style="display: inline-block">
             <div align="center">
+            <span class="jrna-wday"></span>
+            </div>
+            <div align="center">
             <span class="jrna-date"></span>
             </div>
             <div align="center">
@@ -77,6 +80,8 @@
         <div class="record">
             <span class="jrna-time">??:??</span>
             <span class="jrna-text">...</span>
+            <span class="jrna-score score"></span>
+            <span class="jrna-fun fun"></span>
         </div>
 
         <div class="stat">
@@ -102,10 +107,15 @@
             .htmlFrom('#library .record')
             .output('text')
             .output('time')
+            .output('score')
+            .output('fun')
             .args( 'rec' )
             .def( 'update', function() {
-                this.text = this.rec.text;
-                this.time = strftime('%H:%M', this.rec.time);
+                const rec = this.rec;
+                this.text = rec.text;
+                this.time = strftime('%H:%M', rec.time);
+                this.score = rec.score ? ('(+'+rec.score+')') : '';
+                this.fun   = rec.fun   ? ('(+'+rec.fun  +')') : '';
             })
             .onAttach( 'update' );
 
@@ -145,11 +155,13 @@
             .click( 'control', function () {
                 fullDay.show( this.day );
             })
+            .output( 'wday' )
             .output( 'date' )
             .output( 'fun' )
             .output( 'score' )
             .args( 'day' )
             .def( 'update', function() {
+                this.wday  = this.day.wday();
                 this.date  = this.day.day;
                 this.score = this.day.score();
                 this.fun = this.day.fun();
