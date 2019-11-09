@@ -56,9 +56,13 @@
             <button class="jrna-deed">\m/</button>
             <button class="jrna-fun">;-)</button>
             <button class="jrna-note">note</button>
+            <br>
+            <input class="jrna-date" style="width: 3em">
+            <input class="jrna-time" style="width: 3em">
+            <button class="jrna-clear">clear date</button>
         </div>
         <div id="stats-form" class="framed">
-            <input size="10em" class="jrna-name">=<input size="10em" class="jrna-value">
+            <input style="width: 5em" class="jrna-name">=<input style="width: 10em" class="jrna-value">
             <button class="jrna-add">record stat</button>
         </div>
     </div>
@@ -181,8 +185,33 @@
 
         const editor = new jRna()
             .input( 'descr' )
+            .input( 'date' )
+            .input( 'time' )
+            .click( 'clear', function() {
+                this.date = '';
+                this.time = '';
+            })
+            .def( 'fulldate', function() {
+                if (!this.date && !this.time)
+                    return;
+
+                // TODO validator (build it into jrna?)
+                if (!this.date || !this.date.match(/\d\d-\d\d/))
+                    throw new Error('bad date');
+                if (!this.time || !this.time.match(/\d\d:\d\d/))
+                    throw new Error('bad time');
+
+                // omg hack, move to smth sensible
+                const datestr = new Date().getFullYear() + '-'
+                    +this.date + ' ' + this.time + ':00';
+
+                const val = new Date(datestr);
+                if (Number.isNaN(val.getTime()))
+                    throw new Error('invalid date '+datestr);
+                return val;
+            })
             .def( 'save', function(defaults={}) {
-                pfc.addRecord({ ...defaults, text: this.descr });
+                pfc.addRecord({ ...defaults, text: this.descr, time: this.fulldate() });
                 this.descr = '';
             })
             .click( 'deed', 'save' )
