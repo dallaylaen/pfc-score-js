@@ -114,8 +114,8 @@
                 const rec = this.rec;
                 this.text = rec.text;
                 this.time = strftime('%H:%M', rec.time);
-                this.score = rec.score ? ('(+'+rec.score+')') : '';
-                this.fun   = rec.fun   ? ('(+'+rec.fun  +')') : '';
+                this.score = rec.score ? ('[+'+rec.score+']') : '';
+                this.fun   = rec.fun   ? (':) '.repeat(rec.fun)) : '';
             })
             .onAttach( 'update' );
 
