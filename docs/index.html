@@ -51,15 +51,17 @@
             <div class="jrna-content">
             </div>
         </div>
+        <div id="retro" align="center">
+            <input class="jrna-date"><button class="jrna-clear">reset date</button>
+        </div>
         <div id="editor" align="center" class="framed">
             <input class="jrna-descr"><br>
             <button class="jrna-deed">\m/</button>
             <button class="jrna-fun">;-)</button>
             <button class="jrna-note">note</button>
             <br>
-            <input class="jrna-date" style="width: 3em">
             <input class="jrna-time" style="width: 3em">
-            <button class="jrna-clear">clear date</button>
+            <button class="jrna-clear">clear time</button>
         </div>
         <div id="stats-form" class="framed">
             <input style="width: 5em" class="jrna-name">=<input style="width: 10em" class="jrna-value">
@@ -106,6 +108,13 @@
         } catch(e) {
             window.onerror("Failed to load pfc data: "+e);
         };
+
+        const retro = new jRna()
+            .input( 'date' )
+            .click( 'clear', function() {
+                this.date = '';
+            })
+            .attach($('#retro'));
 
         const showRecord = new jRna()
             .htmlFrom('#library .record')
@@ -157,6 +166,7 @@
         const showDay = new jRna()
             .htmlFrom('#library .day')
             .click( 'control', function () {
+                retro.date = this.day.day;
                 fullDay.show( this.day );
             })
             .output( 'wday' )
@@ -185,34 +195,15 @@
 
         const editor = new jRna()
             .input( 'descr' )
-            .input( 'date' )
             .input( 'time' )
             .click( 'clear', function() {
-                this.date = '';
                 this.time = '';
             })
-            .def( 'fulldate', function() {
-                if (!this.date && !this.time)
-                    return;
-
-                // TODO validator (build it into jrna?)
-                if (!this.date || !this.date.match(/\d\d-\d\d/))
-                    throw new Error('bad date');
-                if (!this.time || !this.time.match(/\d\d:\d\d/))
-                    throw new Error('bad time');
-
-                // omg hack, move to smth sensible
-                const datestr = new Date().getFullYear() + '-'
-                    +this.date + ' ' + this.time + ':00';
-
-                const val = new Date(datestr);
-                if (Number.isNaN(val.getTime()))
-                    throw new Error('invalid date '+datestr);
-                return val;
-            })
             .def( 'save', function(defaults={}) {
-                pfc.addRecord({ ...defaults, text: this.descr, time: this.fulldate() });
+                const time = this.time ? PFC.time2date( this.time, retro.date ) : undefined;
+                pfc.addRecord({ ...defaults, text: this.descr, time: time });
                 this.descr = '';
+                this.time = '';
             })
             .click( 'deed', 'save' )
             .click( 'note', [ 'save', { score: 0 }] )
