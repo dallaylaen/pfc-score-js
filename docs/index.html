@@ -59,9 +59,6 @@
             <button class="jrna-deed">\m/</button>
             <button class="jrna-fun">;-)</button>
             <button class="jrna-note">note</button>
-            <br>
-            <input class="jrna-time" style="width: 3em">
-            <button class="jrna-clear">clear time</button>
         </div>
         <div id="stats-form" class="framed">
             <input style="width: 5em" class="jrna-name">=<input style="width: 10em" class="jrna-value">
@@ -195,15 +192,18 @@
 
         const editor = new jRna()
             .input( 'descr' )
-            .input( 'time' )
-            .click( 'clear', function() {
-                this.time = '';
-            })
             .def( 'save', function(defaults={}) {
-                const time = this.time ? PFC.time2date( this.time, retro.date ) : undefined;
-                pfc.addRecord({ ...defaults, text: this.descr, time: time });
+                let descr = this.descr;
+                let t;
+                // TODO move spliting out dates, tags, smileys etc into model
+                const split = descr.match(/^\s*(\d\d:\d\d)\s+(.*)/);
+                if (split) {
+                    t     = split[1];
+                    descr = split[2];
+                };
+                const time = t ? PFC.time2date( t, retro.date ) : undefined;
+                pfc.addRecord({ ...defaults, text: descr, time: time });
                 this.descr = '';
-                this.time = '';
             })
             .click( 'deed', 'save' )
             .click( 'note', [ 'save', { score: 0 }] )
