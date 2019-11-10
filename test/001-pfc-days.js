@@ -5,6 +5,19 @@ const expect = chai.expect;
 
 const PFC = require( '../lib/pfc.js' );
 
+
+describe( 'PFC.time2date', () => {
+    it ('converts dates to dates', done => {
+        const dateEq = (x,y) => expect( x.getTime() ).to.equal( y.getTime() );
+        const time2date = PFC.time2date;
+
+        dateEq( time2date( '12:35', '11-07' ), new Date('2019-11-07 12:35:00') );
+
+        dateEq( time2date( '12:35' ), new Date(PFC.time2day(new Date())+' 12:35:00') );
+
+        done();
+    });
+});
 describe( 'PFC.Day', () => {
     it ('has wday', done => {
         const day = new PFC.Day('2019-11-02');
