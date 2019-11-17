@@ -223,7 +223,7 @@
             .click('add', function(e) {
                 if( !this.name || !this.value )
                     return;
-                pfc.addStat({name: this.name, value: this.value});
+                pfc.addStat({name: this.name, value: this.value, day: retro.date});
                 this.name = '';
                 this.value = '';
             })
