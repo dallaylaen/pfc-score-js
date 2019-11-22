@@ -201,8 +201,11 @@
                     t     = split[1];
                     descr = split[2];
                 };
+                const inscore = descr.match(/\(\+(\d+)\)/);
+                console.log(inscore);
+                const score = inscore ? Number.parseInt(inscore[1]) : defaults.score;
                 const time = t ? PFC.time2date( t, retro.date ) : undefined;
-                pfc.addRecord({ ...defaults, text: descr, time: time });
+                pfc.addRecord({ ...defaults, text: descr, time, score });
                 this.descr = '';
             })
             .click( 'deed', 'save' )
