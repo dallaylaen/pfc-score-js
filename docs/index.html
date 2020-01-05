@@ -212,7 +212,7 @@
             .click( 'note', [ 'save', { score: 0 }] )
             .click( 'fun',  [ 'save', { score: 0, fun: 1 }] )
             .on( 'keypress', 'descr', function(ev) {
-                if (ev.key == "Enter") {
+                if (ev.key === "Enter") {
                     ev.preventDefault();
                     this.save();
                 };
@@ -223,12 +223,19 @@
         const stats = new jRna()
             .input('name')
             .input('value')
-            .click('add', function(e) {
+            .def( 'save', function() {
                 if( !this.name || !this.value )
                     return;
                 pfc.addStat({name: this.name, value: this.value, day: retro.date});
                 this.name = '';
                 this.value = '';
+            })
+            .click('add', 'save')
+            .on( 'keypress', 'value', function(ev) {
+                if (ev.key === "Enter") {
+                    ev.preventDefault();
+                    this.save();
+                };
             })
             .attach('#stats-form');
 
