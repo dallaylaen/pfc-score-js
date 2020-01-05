@@ -52,7 +52,15 @@
             </div>
         </div>
         <div id="retro" align="center">
-            <input class="jrna-date"><button class="jrna-clear">reset date</button>
+            <div>
+                <input class="jrna-date">
+                <button class="jrna-clear">reset date</button>
+                <button class="jrna-toggle">enter whole day</button>
+            </div>
+            <div class="jrna-allday">
+                <textarea class="jrna-content"></textarea>
+                <button class="jrna-save">save</button>
+            </div>
         </div>
         <div id="editor" align="center" class="framed">
             <input class="jrna-descr"><br>
@@ -111,6 +119,30 @@
             .click( 'clear', function() {
                 this.date = '';
             })
+            .element( 'allday' )
+            .output( 'toggle' )
+            .def( 'visible', false )
+            .def( 'show', function() {
+                this.allday.show();
+                this.toggle = 'cancel';
+                this.visible = true;
+            })
+            .def( 'hide', function () {
+                this.allday.hide();
+                this.toggle = 'enter whole day';
+                this.visible = false;
+            })
+            .click( 'toggle', function() {
+                this.visible ? this.hide() : this.show();
+            })
+            .onAttach( 'hide' )
+            .input( 'content' )
+            .def( 'save', function() {
+                // TODO actually save
+                this.content = '';
+                this.hide();
+            })
+            .click( 'save', 'save' )
             .attach($('#retro'));
 
         const showRecord = new jRna()
