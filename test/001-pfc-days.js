@@ -106,5 +106,20 @@ describe( 'PFC', () => {
 
         done();
     });
+
+    it ('can add multiple recs', done => {
+        const pfc = new PFC();
+
+        pfc.addText( "12:00 foo\nbar\n13:00 a great deed\n", {} );
+
+        const days = pfc.getDays();
+
+        expect( days.length ).to.equal(1);
+        const today = pfc.getDetails( days[0] );
+        expect( today.score() ).to.equal(2);
+        expect( today.fun() ).to.equal(0);
+
+        done();
+    });
 });
 
